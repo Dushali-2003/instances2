@@ -1,5 +1,5 @@
 resource "aws_instance" "my_vm" {
-count = "2"
+count = var.instance_count
 ami = var.ami
 subnet_id = var.subnet_id
 instance_type = var.instance_type
