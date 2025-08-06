@@ -3,7 +3,7 @@ backend = "s3"
 config = {
 bucket = "student.50-garg-bucket"
 key = "student.50-network-state"
-region = "us-east-2"
+region = var.region
 }
 }
 resource "aws_instance" "my_vm" {
