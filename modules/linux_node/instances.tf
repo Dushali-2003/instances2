@@ -31,6 +31,6 @@ resource "null_resource" "install_package" {
 count = length(aws_instance.my_vm)>0 ? 1 : 0
 depends_on = [time_sleep.wait_30_seconds]
 provisioner "local-exec" {
-command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i /home/dushali/terraform_base2/ansible_inventory.yaml /home/dushali/terraform_base2/ansible-playbooks/${var.playbook_name} --private-key '/home/dushali/terraform_base2/keys2/student.50-vm-key' "
+command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i /home/dushali/terraform_base2/ansible_inventory.yaml -i /home/dushali/terraform_base2/ansible_webservers_inventory.yaml /home/dushali/terraform_base2/ansible-playbooks/${var.playbook_name} --private-key '/home/dushali/terraform_base2/keys2/student.50-vm-key' "
 }
 }

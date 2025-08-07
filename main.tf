@@ -23,7 +23,7 @@ playbook_name = "install-apache.yaml"
 
 module "loadbalancer" {
 source = "./modules/linux_node"
-instance_count = "0"
+instance_count = "1"
 ami = "ami-003932de22c285676"
 instance_type = "t3.micro"
 key_name = data.terraform_remote_state.network_details.outputs.my_key
@@ -32,6 +32,7 @@ vpc_security_group_ids = data.terraform_remote_state.network_details.outputs.sec
 tags = {
 Name = var.loadbalancer_prefix
 }
-install_package = ""
-playbook_name = ""
+install_package = "loadbalancer"
+playbook_name = "install-ha-proxy.yaml"
+depends_on = [module.webserver]
 }
