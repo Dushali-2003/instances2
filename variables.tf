@@ -18,3 +18,6 @@ variable "lb_docker_host_prefix" {
 default = "student.50-lb_docker_host-vm"
 }
  
+variable "jenkins_master_prefix" {
+default = "student.50-jenkins-vm"
+}

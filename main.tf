@@ -9,7 +9,7 @@ data "terraform_remote_state" "network_details" {
 module "webserver" {
   source                 = "./modules/linux_node"
   ami                    = "ami-003932de22c285676"
-  instance_count         = "1"
+  instance_count         = "0"
   instance_type          = "t3.micro"
   key_name               = data.terraform_remote_state.network_details.outputs.my_key
   subnet_id              = data.terraform_remote_state.network_details.outputs.my_subnet
@@ -39,7 +39,7 @@ module "loadbalancer" {
 
 module "web_docker_host" {
   source                 = "./modules/linux_node"
-  instance_count         = "1"
+  instance_count         = "0"
   ami                    = "ami-003932de22c285676"
   instance_type          = "t3.micro"
   key_name               = data.terraform_remote_state.network_details.outputs.my_key
@@ -55,7 +55,7 @@ module "lb_docker_host"{
 source = "./modules/linux_node"
 ami = "ami-003932de22c285676"
 instance_type = "t3.micro"
-instance_count = "1"
+instance_count = "0"
 subnet_id = data.terraform_remote_state.network_details.outputs.my_subnet
 key_name = data.terraform_remote_state.network_details.outputs.my_key
 vpc_security_group_ids = data.terraform_remote_state.network_details.outputs.security_group_id_array
@@ -68,17 +68,17 @@ depends_on = [module.web_docker_host]
 }
 
 
-module "web_docker_host" {
-source = "./modules/linux_node"
-instance_count = "1"
-ami = "ami-003932de22c285676"
-instance_type = "t3.micro"
-key_name = data.terraform_remote_state.network_details.outputs.my_key
-subnet_id = data.terraform_remote_state.network_details.outputs.my_subnet
-vpc_security_group_ids = data.terraform_remote_state.network_details.outputs.security_group_id_array
-tags = {
-Name = var.web_docker_host_prefix
-}
-install_package = "dockerhost"
-playbook_name = "install-docker.yaml"
+module "jenkins_master" {
+  source                 = "./modules/linux_node"
+  ami                    = "ami-003932de22c285676"
+  instance_count         = "1"
+  instance_type          = "t3.micro"
+  key_name               = data.terraform_remote_state.network_details.outputs.my_key
+  subnet_id              = data.terraform_remote_state.network_details.outputs.my_subnet
+  vpc_security_group_ids = data.terraform_remote_state.network_details.outputs.security_group_id_array
+  tags = {
+    Name = var.jenkins_master_prefix
+  }
+  install_package = "jenkins"
+  playbook_name   = "install-jenkins-master.yaml"
 }

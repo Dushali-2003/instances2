@@ -13,15 +13,12 @@ resource "local_file" "tf_ansible_inventory" {
 
   content  = <<-EOT
 [${var.install_package}]
-<<<<<<< HEAD
 %{for vm in aws_instance.my_vm[*]}
 ${vm.private_dns} ansible_host=${vm.public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=/home/dushali/terraform_base2/keys2/student.50-vm-key ansible_ssh_common_args='-o IdentitiesOnly=yes'
 %{endfor}
-=======
 %{for vm in aws_instance.my_vm~}
 ${vm.private_dns} ansible_host=${vm.public_ip} ansible_ssh_user=ubuntu ansible_ssh_private_key_file='/home/dushali/terraform_base2/keys2/student.50-vm-key' ansible_ssh_common_args='-o IdentitiesOnly=yes'
 %{endfor~}
->>>>>>> lb_host
 EOT
 
   filename = "./tf_ansible_${var.install_package}_inventory.ini"
@@ -38,13 +35,11 @@ resource "null_resource" "install_package" {
   count      = length(aws_instance.my_vm) > 0 ? 1 : 0
   depends_on = [time_sleep.wait_30_seconds]
   provisioner "local-exec" {
-<<<<<<< HEAD
-    environment = {
+  environment = {
+      LC_ALL                  = "en_US.UTF-8"
+      LANG                    = "en_US.UTF-8"
       ANSIBLE_SSH_COMMON_ARGS = " -o IdentitiesOnly=yes"
     }
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i ./tf_ansible_${var.install_package}_inventory.ini -i ./tf_ansible_webservers_inventory.ini /home/dushali/terraform_base2/ansible-playbooks/${var.playbook_name} --private-key '../../../keys2/student.50-vm-key'"
-=======
-    command = "LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i ./tf_ansible_${var.install_package}_inventory.ini -i ./tf_ansible_webservers_inventory.ini -i ./tf_ansible_dockerhost_inventory.ini ../ansible-playbooks/${var.playbook_name} --private-key '/home/dushali/terraform_base2/keys2/student.50-vm-key' "
->>>>>>> lb_host
-  }
+    command = "sudo apt-get install openjdk-17-jdk -y && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i ./tf_ansible_${var.install_package}_inventory.ini  ../ansible-playbooks/${var.playbook_name} --private-key '/home/dushali/terraform_base2/keys2/student.50-vm-key'"
+ }
 }
